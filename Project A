@@ -44,9 +44,10 @@ def super_func2(arr, cord):
     place = 0
     for i in range(6, 11):
         if arr[cord][i] != "океан":
-            if arr[i][0] + arr[i][2] > good_status:
-                good_status = arr[i][0] + arr[i][2]
-                place = i
+            a = arr[cord][i] - 1
+            if arr[a][0] + arr[a][2] > good_status:
+                good_status = arr[a][0] + arr[a][2]
+                place = a
     return place
 
 
@@ -171,17 +172,13 @@ def array_generation(x, y, s):
                         array1.insert(j + 5, i + 1 + x - 1)
                         array1.insert(j + 6, i + 1 - 1)
                 break
-                # array1.insert(j, -1)
             elif j == 4:
                 array1.insert(j, i + 1)
-                # array1.insert(j, (i // x + 1) * 10 + (i + 1) % x)
-                # if array1[j] % 10 == 0:
-                #     array1[j] = array1[j] + x
             else:
                 array1.insert(j, randint(0, 10))
         array.insert(i, array1)
     for a in range(size):
-        for b in range(s):
+        for b in range(s + 1):
             if b > 4:
                 if array[a][b] == -1:
                     array[a][b] = "океан"
@@ -189,7 +186,7 @@ def array_generation(x, y, s):
 
 
 def move(co1):
-    cord = co1
+    cord = co1 - 1
     return cord
 
 
@@ -200,10 +197,10 @@ def array_output(arr, x):
 
 # 0 - Деньги, 1 - пища, 2 - производство, 3 - очки производства, 4 - 9 - номера соседних клеток
 
-x_tiles = 4
-y_tiles = 4
+x_tiles = 6
+y_tiles = 6
 size_of_tile = 11
-our_cord = 4
+our_cord = randint(0, (x_tiles*y_tiles)-1)
 civ_map = array_generation(x_tiles, y_tiles, size_of_tile)
 array_output(civ_map, y_tiles * x_tiles)
 print("Добро пожаловать в программу анализа ходов для цивилизации!")
@@ -252,6 +249,7 @@ while 1:
         print("Вы выбрали генерацию нового поля!")
         civ_map = array_generation(x_tiles, y_tiles, size_of_tile)
         array_output(civ_map, y_tiles * x_tiles)
+        our_cord = randint(0, (x_tiles * y_tiles) - 1)
     elif flag == 4:
         print("Вы выбрали повторную демонстрацию имеющихся даных.")
         array_output(civ_map, y_tiles * x_tiles)
@@ -260,20 +258,20 @@ while 1:
         break
     elif flag == 5:
         print("Вы выбрали информацию о текущей координате!")
-        print("Ваша ячейка имеет номер", our_cord, ", и выглядит так: ", civ_map[our_cord - 1])
+        print("Ваша ячейка имеет номер", our_cord + 1, ", и выглядит так: ", civ_map[our_cord])
     elif flag == 6:
         print("Вы выбрали переход на другую клетку!")
         print("Выберите на какой тайл вы хотите переместиться")
         cord = int(input("Координата: "))
         our_cord = move(cord)
-        print("Вы успешно достигли точки ", our_cord)
+        print("Вы успешно достигли точки ", our_cord + 1)
         print(civ_map[our_cord])
     elif flag == 7:
         print("Вы выбрали анализ и перемещение на лучшую клетку рядом!")
         top_place = super_func2(civ_map, our_cord)
-        print("Лучшая точка рядом это ячейка номер ", top_place)
+        print("Лучшая точка рядом это ячейка номер ", top_place + 1)
         print(civ_map[top_place])
-        our_cord = top_place
-        print("Вы переместились на точку ", our_cord)
+        our_cord = move(top_place) + 1
+        print("Вы переместились на точку ", our_cord + 1)
     else:
         print("Не корректный ввод, попробуйте снова")
